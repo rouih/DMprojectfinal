@@ -3,6 +3,8 @@ import sys
 import networkx as nx
 from time import sleep
 import matplotlib.pyplot as plt
+from os import listdir
+
 
 
 class Twitter:
@@ -59,26 +61,39 @@ class Twitter:
                     continue
                 except StopIteration:
                     break
-            self.draw_graph(graph)
+            self.draw_graph(graph,now_id)
         return graph
 
-    def draw_graph(self, graph):
+    def draw_graph(self, graph,currid):
         plt.clf()
         pos = nx.spring_layout(graph)
         nx.draw_networkx_nodes(graph, pos)
         nx.draw_networkx_edges(graph, pos)
-        print (nx.closeness_centrality(graph))
+        log_cetrality(currid,graph)
+        plt.title("Friends Graph")
         plt.draw()
         plt.pause(0.5)
         plt.savefig("hey")
 
+def log_cetrality(currID,graph):
+    """
+    Logging time and relevant message for it and prints on screen the message.
+    :param msg: The message to print.
+    :return: None.
+    """
+    with open('logfile.txt', 'a') as log:
+        log_str = '{}: {}\n'.format(currID, nx.closeness_centrality(graph))
+        log.write(log_str)
+
+    return None
 
 def main():
     # Receives a username as argument
-    user_name = "itayhatzuel"
+    user_name = "realDonaldTrump"
     twitter = Twitter()
     user_id = twitter.api.get_user(user_name).id
     twitter.build_graph(user_id)
+
 
 
 
