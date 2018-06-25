@@ -1,5 +1,6 @@
 import tweepy
 import sys
+import operator
 import networkx as nx
 from time import sleep
 import matplotlib.pyplot as plt
@@ -74,7 +75,7 @@ class Twitter:
     def draw_graph(self, graph):
         plt.clf()
         pos = nx.spring_layout(graph)
-        nx.draw_networkx_nodes(graph, pos, node_size=150, node_color='b')
+        nx.draw_networkx_nodes(graph, pos, node_size=85, node_color='b')
         nx.draw_networkx_edges(graph, pos)
         plt.title("Friends Graph")
         plt.draw()
@@ -85,10 +86,11 @@ def log_cetrality(graph):
     if(len(graph)==1):
         print("Empty Graph")
         return None
-    GraphCen=nx.degree_centrality(graph)
-    w = csv.writer(open("./output/output.csv", "a"))
+    GraphCen=nx.eigenvector_centrality(graph)
+    w = csv.writer(open("./output/centr.csv", "a"))
     for key, val in GraphCen.items():
         w.writerow([key, val])
+    print("User with highset centrality:"+str(max(GraphCen.iteritems(),key=operator.itemgetter(1))[0]))
     return None
 
 def main():

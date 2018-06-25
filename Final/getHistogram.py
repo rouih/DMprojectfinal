@@ -13,7 +13,7 @@ def showHisto(inputGraph):
     deg, cnt = zip(*degreeCount.items())
 
     fig, ax = plt.subplots()
-    plt.bar(deg, cnt, width=0.80, color='b')
+    plt.bar(deg, cnt, width=0.80, color='y')
 
     plt.title("Degree Histogram")
     plt.ylabel("Count")
