@@ -4,6 +4,7 @@ import networkx as nx
 from time import sleep
 import matplotlib.pyplot as plt
 from os import listdir
+from getHistogram import *
 
 
 
@@ -57,9 +58,12 @@ class Twitter:
                         break
                 except tweepy.TweepError:
                     print("Rate limited. Sleeping for 15 minutes.")
+                    showHisto(graph)
                     sleep(15 * (60))
                     continue
+                    break
                 except StopIteration:
+                    print("hje")
                     break
             self.draw_graph(graph,now_id)
         return graph
@@ -67,19 +71,17 @@ class Twitter:
     def draw_graph(self, graph,currid):
         plt.clf()
         pos = nx.spring_layout(graph)
-        nx.draw_networkx_nodes(graph, pos)
+        nx.draw_networkx_nodes(graph, pos, node_size=150, node_color='b')
         nx.draw_networkx_edges(graph, pos)
         log_cetrality(currid,graph)
         plt.title("Friends Graph")
         plt.draw()
         plt.pause(0.5)
-        plt.savefig("hey")
+        plt.savefig("finalGraph")
 
 def log_cetrality(currID,graph):
     """
-    Logging time and relevant message for it and prints on screen the message.
-    :param msg: The message to print.
-    :return: None.
+    Log the centrality for each user.
     """
     with open('logfile.txt', 'a') as log:
         log_str = '{}: {}\n'.format(currID, nx.closeness_centrality(graph))
@@ -89,10 +91,11 @@ def log_cetrality(currID,graph):
 
 def main():
     # Receives a username as argument
-    user_name = "realDonaldTrump"
+    user_name = "ladygaga"
     twitter = Twitter()
     user_id = twitter.api.get_user(user_name).id
     twitter.build_graph(user_id)
+    print("Show Histogram?")
 
 
 
